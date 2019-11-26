@@ -15,9 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 Auth::routes();
 
-Route::get('/home/', 'HomeController@index')->name('index');
-
+Route::get('/home/', 'HomeController@index');
+Route::get('/home/{name}', 'HomeController@show');
+Route::post('/home/upload', 'HomeController@create');

@@ -8,37 +8,46 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     protected $pokemons;
-    protected $pokeImages;
 
     /**
-     * Create a new controller instance.
-     *
+     * HomeController constructor.
      * @param Pokemons $pokemons
-     * @param Pokemons $pokeImages
      */
-    public function __construct(Pokemons $pokemons, Pokemons $pokeImages)
+    public function __construct(Pokemons $pokemons)
     {
         $this->middleware('auth');
         $this->pokemons = $pokemons;
-        $this->pokeImages = $pokeImages;
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function index()
     {
         $pokemons = $this->pokemons->all();
-        $pokeImages = $this->pokemons->allImages();
-
         return view('home.index', [
-            'pokemons' => $pokemons->results,
-            'pokeImages' => $pokeImages->sprites->front_default
+            'pokemons' => $pokemons,
 
         ]);
+    }
+
+    /**
+     * @param $pokemon
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function show($pokemon)
+    {
+        $pokemon = $this->pokemons->find($pokemon);
+        return view('home.show', compact('pokemon') );
+
+    }
+
+    /**
+     * @param Request $req
+     */
+    public function create(Request $req) {
 
     }
 
