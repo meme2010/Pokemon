@@ -2,27 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Pokemons;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    protected $pokemons;
+
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * HomeController constructor.
+     * @param Pokemons $pokemons
      */
-    public function __construct()
+    public function __construct(Pokemons $pokemons)
     {
         $this->middleware('auth');
+        $this->pokemons = $pokemons;
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function index()
     {
-        return view('home');
+        $pokemons = $this->pokemons->all();
+        return view('home.index', [
+            'pokemons' => $pokemons,
+
+        ]);
     }
+
+    /**
+     * @param $pokemon
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function show($pokemon)
+    {
+        $pokemon = $this->pokemons->find($pokemon);
+        return view('home.show', compact('pokemon') );
+
+    }
+
+    /**
+     * @param Request $req
+     */
+    public function create(Request $req) {
+
+    }
+
+
 }
